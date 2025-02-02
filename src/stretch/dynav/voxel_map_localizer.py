@@ -140,6 +140,7 @@ class VoxelMapLocalizer:
         rgb: Optional[Tensor],
         weights: Optional[Tensor] = None,
         obs_count: Optional[Tensor] = None,
+        weight_decay = 0.95
     ):
         """Adds a pointcloud to the voxel map.
 
@@ -157,6 +158,8 @@ class VoxelMapLocalizer:
             rgb = rgb.to(self.device)
         if weights is not None:
             weights = weights.to(self.device)
+        # else:
+        #     weights = torch.ones(points.shape[0], device=self.device)
         # if weight_decay is not None and self.voxel_pcd._weights is not None:
         #     self.voxel_pcd._weights *= weight_decay
         self.voxel_pcd.add(
@@ -190,6 +193,7 @@ class VoxelMapLocalizer:
         point_alignments = clip_text_tokens.float() @ features.float().T
 
         # print(point_alignments.shape)
+        # + torch.nan_to_num(weights.float(), nan=0.0, posinf=1.0, neginf=-1.0)
         return point_alignments
 
     def find_alignment_for_A(self, A):

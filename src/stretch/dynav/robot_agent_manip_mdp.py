@@ -90,6 +90,15 @@ class RobotAgentMDP:
 
         if not os.path.exists("dynamem_log"):
             os.makedirs("dynamem_log")
+        
+        if method == "enhanced_dynamem":
+            from stretch.dynav.memory_map_server import ImageProcessor as VoxelMapImageProcessor
+
+            self.image_processor = VoxelMapImageProcessor(
+                rerun=True,
+                rerun_visualizer=self.robot._rerun,
+                log="dynamem_log/" + datetime.now().strftime("%Y%m%d_%H%M%S"),
+            )  # type: ignore
 
         if method == "dynamem":
             from stretch.dynav.voxel_map_server import ImageProcessor as VoxelMapImageProcessor
